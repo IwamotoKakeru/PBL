@@ -6,10 +6,10 @@ const int th = 3; //しきい値
 
 bool rainFlag = false;
 bool moved = false;
-bool userInput = false;
+char buf = 'n';
 
 void setup() {
-  Serial.begin( 9600 );
+  Serial.begin(9600);
   pinMode(MOTOR_PIN, OUTPUT);
 }
 
@@ -39,9 +39,8 @@ void print(float voltage) {
 }
 
 void serialCom(void) {
-  if (Serial.available()>3){
-    char buf[4];
-    Serial.readBytes(buf,4);
+  if (Serial.available()>3) {
+    Serial.readBytes(buf, 1);
     Serial.println("");
     Serial.println("Echo back from Arduino...");
     Serial.print("'");
@@ -56,8 +55,10 @@ void loop() {
   setRainState(voltage);
   print(voltage);
 
-  if (userInput) {
+  serialCom();
+  if (buf == 'y') {
     moveMotor(2000);
+    buf = 'n';
   } else if (rainFlag && !moved) {
     moveMotor(2000);
     setMoved(true);
@@ -67,7 +68,6 @@ void loop() {
     setMoved(false);
   }
 
-  serialCom();
 
   delay(1000);
 }
