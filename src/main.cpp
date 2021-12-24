@@ -37,6 +37,18 @@ void print(float voltage) {
   Serial.println("");
 }
 
+void serialCom(){
+  if (Serial.available()>3){
+    char buf[4];
+    Serial.readBytes(buf,4);
+    Serial.println("");
+    Serial.println("Echo back from Arduino...");
+    Serial.print("'");
+    Serial.print(buf);
+    Serial.println("'");
+  }
+}
+
 void loop() {
   int input = analogRead( PIN_ANALOG_INPUT );
   float voltage = input * 5.0 / 1023.0; //アナログ値を電圧値へ変更
@@ -51,6 +63,8 @@ void loop() {
   if (!rainFlag) {
     setMoved(false);
   }
+
+  serialCom();
 
   delay( 1000 ); 
 }
