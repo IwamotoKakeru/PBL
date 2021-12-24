@@ -6,6 +6,7 @@ const int th = 3; //しきい値
 
 bool rainFlag = false;
 bool moved = false;
+bool userInput = false;
 
 void setup() {
   Serial.begin( 9600 );
@@ -28,16 +29,16 @@ void moveMotor(int time){         //モータをtimeミリ秒だけ動かす
 
 void print(float voltage) {
   setRainState(voltage);
-  Serial.print("voltage:");
+  Serial.print("voltage: ");
   Serial.println(voltage);
-  Serial.print("rainFlag:");
-  Serial.println( rainFlag );
-  Serial.print("moved:");
-  Serial.println( moved );
+  Serial.print("rainFlag: ");
+  Serial.println(rainFlag);
+  Serial.print("moved: ");
+  Serial.println(moved);
   Serial.println("");
 }
 
-void serialCom(){
+void serialCom(void) {
   if (Serial.available()>3){
     char buf[4];
     Serial.readBytes(buf,4);
@@ -55,7 +56,9 @@ void loop() {
   setRainState(voltage);
   print(voltage);
 
-  if(rainFlag && !moved){
+  if (userInput) {
+    moveMotor(2000);
+  } else if (rainFlag && !moved) {
     moveMotor(2000);
     setMoved(true);
   }
@@ -66,5 +69,5 @@ void loop() {
 
   serialCom();
 
-  delay( 1000 ); 
+  delay(1000);
 }
